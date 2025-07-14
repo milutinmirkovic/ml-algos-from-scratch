@@ -1,6 +1,12 @@
 from typing import List, Union, Dict
 from math import sqrt
 
+__all__ = [
+    "confusion_matrix",
+    "display_confusion_matrix",
+    "classification_metrics",
+    "mse", "rmse", "mae", "r_squared"
+]
 
 def confusion_matrix(
         y_true: List[Union[int,str]],
