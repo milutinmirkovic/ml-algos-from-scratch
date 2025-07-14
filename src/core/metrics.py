@@ -7,7 +7,7 @@ def confusion_matrix(
         y_pred: List[Union[int,str]]) -> Dict[Union[int,str],Dict[Union[int,str],int]]:      
     
     matrix = {}
-    labels = set(y_true+y_pred)
+    labels = set(list(y_true) + list(y_pred))
 
     for true_label in labels:
         matrix[true_label] = {pred_label: 0 for pred_label in labels}
