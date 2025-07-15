@@ -69,7 +69,7 @@ def classification_metrics(
 
     else:
         # Macro average for multiclass
-        accuracies, recalls, precisions, f1s = [], [], [], []
+        recalls, precisions, f1s =  [], [], []
         for label in labels:
             TP = matrix[label][label]
             FP = sum(matrix[other][label] for other in labels if other != label)
