@@ -113,6 +113,7 @@ class LinearRegression:
 
         losses = []
         for i in range(self.max_iterations):
+
             predictions = self._forward_pass(X)
             loss = self._compute_loss(y,predictions)
             dW, db = self._compute_gradients(X,y,predictions)

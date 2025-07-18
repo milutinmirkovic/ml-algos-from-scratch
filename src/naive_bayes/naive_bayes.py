@@ -4,8 +4,6 @@ from core.stats import mean, variance,gaussian_pdf
 import math
 import numpy as np
 
-
-
 class NaiveBayes:
 
     def __init__(self,alpha:float = 0.01):

@@ -44,7 +44,6 @@ def classification_metrics(
 
     labels = sorted(matrix.keys())
 
-    # Automatically treat as binary if 2x2 matrix
     if len(labels) == 2:
         pos_label = 1 if 1 in labels else labels[1]
         neg_label = [l for l in labels if l != pos_label][0]
@@ -68,7 +67,7 @@ def classification_metrics(
         }
 
     else:
-        # Macro average for multiclass
+
         recalls, precisions, f1s =  [], [], []
         for label in labels:
             TP = matrix[label][label]
