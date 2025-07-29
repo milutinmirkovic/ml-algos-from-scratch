@@ -45,3 +45,10 @@ for cid in sorted(df["cluster"].unique()):
 
 df.to_csv("clustered_life.csv", index=False)
 print("\nSaved to clustered_life.csv")
+
+
+top_k = kmeans.find_top_k_by_silhouette(X, k_values=range(2, 4), normalize_features=True)
+
+print("\nTop 3 vrednosti k po silhouette indeksu:")
+for k, score in top_k:
+    print(f"k = {k}, silhouette = {score:.4f}")

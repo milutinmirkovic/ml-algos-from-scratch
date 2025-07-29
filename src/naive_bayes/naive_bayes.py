@@ -29,13 +29,9 @@ class NaiveBayes:
             else:
                 freqs = pd.crosstab(X[ft.name], y) 
 
-
                 conditional_probs = (freqs + self.alpha) / ( freqs.sum(axis=0) + self.alpha*freqs.shape[0] )
+                self.model[ft.name] = conditional_probs
 
-                self.model[ft.name] = (conditional_probs)
-
-
-        self.model["features"] = self.features
         
         return self.model
     

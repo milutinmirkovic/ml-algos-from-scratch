@@ -35,8 +35,6 @@ class KMeans:
         return self._initialize_centroids_random(X)
         
 
-        
-        
     def _initialize_centroids_random(self,X:np.ndarray):
 
         indices = np.random.choice(X.shape[0],self.k,replace=False)
@@ -172,15 +170,88 @@ class KMeans:
                 max_dist = np.max(dists)
 
                 if max_dist > spread_factor * avg_dist:
-                    alerts.append(f"Cluster {i} is loose: max dist = {max_dist:.2f}")
+                    alerts.append(f"Klaster {i} je previse rasprsen: max dist = {max_dist:.2f}")
 
 
             for j in range(i + 1, self.k):
                 sep = np.sqrt(np.sum((self.centroids[i] - self.centroids[j]) ** 2))
                 if sep < min_separation:
                     alerts.append(
-                        f"Clusters {i} and {j} are too close: centroid dist = {sep:.2f}"
+                        f"Klasteri {i} i {j} su preblizu: centroid dist = {sep:.2f}"
                     )
 
         return alerts
+    
+    def find_top_k_by_silhouette(self, X: pd.DataFrame, k_values=range(2, 10), normalize_features=False):
+
+        results = []
+
+        for k in k_values:
+
+            self.k = k
+            self.learn(X, normalize_features=normalize_features)
+            scores = self.silhouette_score(X)
+            avg_score = np.mean(scores)
+
+            results.append((k, avg_score))
+
+        results.sort(key=lambda x: x[1], reverse=True)
+
+        return results[:3]
+
         
+
+    def silhouette_score(self, X: np.ndarray) -> np.ndarray:
+        if isinstance(X, pd.DataFrame):
+            X = X.to_numpy()
+
+        n = X.shape[0]
+        scores = np.zeros(n)
+
+        for i in range(n):
+
+            xi = X[i]
+            ci = self.assignments[i]
+
+            # a: prosek distanci do tacaka iz istog klastera
+            a_total_distance = 0
+            a_count = 0
+
+            for j in range(n):
+                if i == j:
+                    continue    
+                if self.assignments[j] == ci:
+                    dist = np.sqrt(np.sum((xi - X[j]) ** 2))
+                    a_total_distance += dist
+                    a_count += 1
+
+            a = a_total_distance / a_count if a_count > 0 else 0
+
+            # b: najmanji prosek do drugih klastera
+            b = float('inf')
+
+            for cj in range(self.k):
+
+                if cj == ci:
+                    continue
+
+                b_total_distance = 0
+                b_count = 0
+
+                for j in range(n):
+                    if self.assignments[j] == cj:
+                        dist = np.sqrt(np.sum((xi - X[j]) ** 2))
+                        b_total_distance += dist
+                        b_count += 1
+
+                if b_count > 0:
+                    b_avg = b_total_distance / b_count
+                    if b_avg < b:
+                        b = b_avg
+
+            s = (b - a) / max(a, b) if max(a, b) > 0 else 0
+            scores[i] = s
+
+            print(f"SKorovi {scores}")
+
+        return scores
